@@ -1,6 +1,6 @@
 # BetfairLogistics
 
-##Prerequisites
+## Prerequisites
 * Creati un microserviciu REST care sa simuleze functionarea unui sistem de gestionare a
 livrarilor de colete catre diverse destinatii.
 * La pornirea aplicatiei, se vor crea automat tabelele DESTINATIONS, ORDERS si vor fi populate
