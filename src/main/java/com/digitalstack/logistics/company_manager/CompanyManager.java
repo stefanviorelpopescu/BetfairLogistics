@@ -11,7 +11,7 @@ public class CompanyManager
 {
     private LocalDate currentDate = LocalDate.of(2021, 12, 14);
 
-    private Long companyProfit;
+    private Long companyProfit = 0L;
 
     /**
      * Advances the currentDate by one day
