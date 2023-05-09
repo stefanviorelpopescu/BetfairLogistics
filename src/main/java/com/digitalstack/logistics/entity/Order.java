@@ -2,15 +2,20 @@ package com.digitalstack.logistics.entity;
 
 import com.digitalstack.logistics.helpers.OrderStatus;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 @Table(name = "orders")
 @Entity
+@Getter
+@Setter
 public class Order
 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Enumerated(EnumType.STRING)
     private OrderStatus status;
 
     @ManyToOne
