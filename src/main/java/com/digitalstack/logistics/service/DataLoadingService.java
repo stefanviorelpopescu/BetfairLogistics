@@ -1,7 +1,7 @@
 package com.digitalstack.logistics.service;
 
-import com.digitalstack.logistics.entity.Destination;
-import com.digitalstack.logistics.entity.Order;
+import com.digitalstack.logistics.model.entity.Destination;
+import com.digitalstack.logistics.model.entity.Order;
 import com.digitalstack.logistics.helpers.OrderStatus;
 import com.digitalstack.logistics.repository.DestinationRepository;
 import com.digitalstack.logistics.repository.OrdersRepository;

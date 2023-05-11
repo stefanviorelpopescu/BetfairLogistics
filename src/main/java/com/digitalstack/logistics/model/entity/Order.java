@@ -1,4 +1,4 @@
-package com.digitalstack.logistics.entity;
+package com.digitalstack.logistics.model.entity;
 
 import com.digitalstack.logistics.helpers.OrderStatus;
 import jakarta.persistence.*;
@@ -19,7 +19,7 @@ public class Order
     private OrderStatus status;
 
     @ManyToOne
-    @JoinColumn(name="destination_id", nullable=false)
+    @JoinColumn(name="destination_id")
     private Destination destination;
 
     private Long deliveryDate;
