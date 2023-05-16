@@ -1,5 +1,6 @@
 package com.digitalstack.logistics.service;
 
+import com.digitalstack.logistics.helpers.InvalidDestinationDtoException;
 import com.digitalstack.logistics.helpers.OrderStatus;
 import com.digitalstack.logistics.model.converter.DestinationConverter;
 import com.digitalstack.logistics.model.dto.DestinationDto;
@@ -69,18 +70,52 @@ public class DestinationService
 
     }
 
-    public DestinationDto addDestination(DestinationDto destinationDto)
+    public DestinationDto addDestination(DestinationDto requestBody) throws InvalidDestinationDtoException
     {
-        validateInput(destinationDto);
+        validateInputForAdd(requestBody);
 
-        Destination destination = DestinationConverter.fromDtoToModel(destinationDto);
+        Destination destination = DestinationConverter.fromDtoToModel(requestBody);
         destinationRepository.save(destination);
 
         return DestinationConverter.fromModelToDto(destination);
     }
 
-    private void validateInput(DestinationDto destinationDto)
+    public DestinationDto updateDestination(DestinationDto requestBody) throws InvalidDestinationDtoException
     {
+        validateInputForUpdate(requestBody);
 
+        Destination destination = destinationRepository.findById(requestBody.getId())
+                .orElseThrow(() -> new InvalidDestinationDtoException("Destination id=" + requestBody.getId() + " not found!!!"));
+        destination.setName(requestBody.getName());
+        destination.setDistance(requestBody.getDistance());
+        destinationRepository.save(destination);
+
+        return DestinationConverter.fromModelToDto(destination);
+    }
+
+    private void validateInputForUpdate(DestinationDto requestBody) throws InvalidDestinationDtoException
+    {
+        String errorMessage = "";
+        if (requestBody.getId() == null) {
+            errorMessage += "Destination ID should be present when updating destinations!\n";
+        }
+        if (!errorMessage.isEmpty()){
+            throw new InvalidDestinationDtoException(errorMessage);
+        }
+    }
+
+    private void validateInputForAdd(DestinationDto requestBody) throws InvalidDestinationDtoException
+    {
+        String errorMessage = "";
+        if (requestBody.getId() != null) {
+            errorMessage += "Destination ID should not be present when creating new destinations!\n";
+        }
+        Optional<Destination> optionalDestination = destinationRepository.findByName(requestBody.getName());
+        if (optionalDestination.isPresent()) {
+            errorMessage += String.format("Destination name=%s already exists!", requestBody.getName());
+        }
+        if (!errorMessage.isEmpty()){
+            throw new InvalidDestinationDtoException(errorMessage);
+        }
     }
 }

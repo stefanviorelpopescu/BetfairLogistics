@@ -2,9 +2,9 @@ package com.digitalstack.logistics.model.dto;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.lang.NonNull;
 
 @Data
 @NoArgsConstructor
@@ -12,11 +12,11 @@ public class DestinationDto
 {
     private Long id;
 
-    @NotBlank
+    @NotBlank(message = "Destination name is required!")
     private String name;
 
-    @NonNull
-    @Min(1)
+    @NotNull(message = "Distance to destination must be set!")
+    @Min(value = 1, message = "Distance must be positive integer!")
     private int distance;
 
 //    @AssertTrue(message = "distance invalid")

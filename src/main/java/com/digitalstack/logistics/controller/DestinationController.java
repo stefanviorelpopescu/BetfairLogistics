@@ -1,5 +1,6 @@
 package com.digitalstack.logistics.controller;
 
+import com.digitalstack.logistics.helpers.InvalidDestinationDtoException;
 import com.digitalstack.logistics.model.dto.DestinationDto;
 import com.digitalstack.logistics.service.DestinationService;
 import jakarta.validation.Valid;
@@ -32,8 +33,16 @@ public class DestinationController
     }
 
     @PostMapping("/add")
-    public ResponseEntity<DestinationDto> addDestination(@Valid @RequestBody DestinationDto body) {
+    public ResponseEntity<DestinationDto> addDestination(@Valid @RequestBody DestinationDto body) throws InvalidDestinationDtoException
+    {
         DestinationDto response = destinationService.addDestination(body);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<DestinationDto> updateDestination(@Valid @RequestBody DestinationDto body) throws InvalidDestinationDtoException
+    {
+        DestinationDto response = destinationService.updateDestination(body);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
