@@ -13,6 +13,11 @@ public class CompanyManager
 
     private Long companyProfit = 0L;
 
+    public LocalDate getCurrentDate()
+    {
+        return currentDate;
+    }
+
     /**
      * Advances the currentDate by one day
      */

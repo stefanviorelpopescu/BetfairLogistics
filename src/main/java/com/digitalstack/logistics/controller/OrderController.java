@@ -1,9 +1,11 @@
 package com.digitalstack.logistics.controller;
 
+import com.digitalstack.logistics.helpers.InvalidOrderDtoException;
 import com.digitalstack.logistics.model.dto.CancelOrdersResponse;
 import com.digitalstack.logistics.model.dto.OrderDto;
 import com.digitalstack.logistics.service.OrdersService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,8 +28,9 @@ public class OrderController
     }
 
     @PostMapping("/add")
-    public ResponseEntity<String> addOrders(@RequestBody List<@Valid OrderDto> requestBody) {
-        return ordersService.addOrders(requestBody);
+    public ResponseEntity<List<OrderDto>> addOrders(@RequestBody List<@Valid OrderDto> requestBody) throws InvalidOrderDtoException
+    {
+        return new ResponseEntity<>(ordersService.addOrders(requestBody), HttpStatus.OK);
     }
 
     @PostMapping("/cancel")

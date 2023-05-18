@@ -2,6 +2,7 @@ package com.digitalstack.logistics.model.dto;
 
 import com.digitalstack.logistics.helpers.OrderStatus;
 import com.digitalstack.logistics.model.converter.OrderConverter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -29,6 +30,7 @@ public class OrderDto
 
     private String lastUpdated;
 
+    @JsonIgnore
     @AssertTrue(message = "Delivery date format must be dd-MM-yyyy !!!")
     public boolean isDateFormatCorrect() {
         if (deliveryDate == null) {

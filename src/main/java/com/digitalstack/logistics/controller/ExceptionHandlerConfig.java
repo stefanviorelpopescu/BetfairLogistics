@@ -1,6 +1,7 @@
 package com.digitalstack.logistics.controller;
 
 import com.digitalstack.logistics.helpers.InvalidDestinationDtoException;
+import com.digitalstack.logistics.helpers.InvalidOrderDtoException;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +28,8 @@ public class ExceptionHandlerConfig
         return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @ExceptionHandler(value = {InvalidDestinationDtoException.class, MethodArgumentNotValidException.class, ConstraintViolationException.class})
+    @ExceptionHandler(value = {InvalidDestinationDtoException.class, MethodArgumentNotValidException.class,
+            ConstraintViolationException.class, InvalidOrderDtoException.class})
     public ResponseEntity<String> handleDestinationAddExceptions(Exception exception) {
 
         if (exception instanceof MethodArgumentNotValidException) {

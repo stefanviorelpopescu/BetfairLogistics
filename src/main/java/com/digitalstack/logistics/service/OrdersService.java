@@ -1,14 +1,19 @@
 package com.digitalstack.logistics.service;
 
+import com.digitalstack.logistics.company_manager.CompanyManager;
+import com.digitalstack.logistics.helpers.InvalidOrderDtoException;
 import com.digitalstack.logistics.helpers.OrderStatus;
+import com.digitalstack.logistics.model.converter.OrderConverter;
 import com.digitalstack.logistics.model.dto.CancelOrdersResponse;
 import com.digitalstack.logistics.model.dto.OrderDto;
+import com.digitalstack.logistics.model.entity.Destination;
 import com.digitalstack.logistics.model.entity.Order;
+import com.digitalstack.logistics.repository.DestinationRepository;
 import com.digitalstack.logistics.repository.OrdersRepository;
 import jakarta.transaction.Transactional;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -21,15 +26,49 @@ public class OrdersService
     private final List<OrderStatus> statusesValidForCancel = Arrays.asList(NEW, DELIVERING);
 
     private final OrdersRepository ordersRepository;
+    private final DestinationRepository destinationRepository;
+    private final CompanyManager companyManager;
 
-    public OrdersService(OrdersRepository ordersRepository)
+    public OrdersService(OrdersRepository ordersRepository, DestinationRepository destinationRepository, CompanyManager companyManager)
     {
         this.ordersRepository = ordersRepository;
+        this.destinationRepository = destinationRepository;
+        this.companyManager = companyManager;
     }
 
-    public ResponseEntity<String> addOrders(List<OrderDto> requestBody)
+    @Transactional
+    public List<OrderDto> addOrders(List<OrderDto> requestBody) throws InvalidOrderDtoException
     {
-        return null;
+        List<Order> orders = new ArrayList<>();
+
+        for (OrderDto orderDto : requestBody)
+        {
+            orders.add(addOrder(orderDto));
+        }
+        ordersRepository.saveAll(orders);
+
+        return OrderConverter.fromOderModels(orders);
+    }
+
+    private Order addOrder(OrderDto orderDto) throws InvalidOrderDtoException
+    {
+        long dateLong = OrderConverter.deliveryDateFromStringToLong(orderDto.getDeliveryDate());
+        long applicationDate = companyManager.getCurrentDate().atStartOfDay().toInstant(ZoneOffset.UTC).toEpochMilli();
+
+        if (dateLong <= applicationDate) {
+            throw new InvalidOrderDtoException("Order Date should be greater than current date!" + orderDto.getDeliveryDate());
+        }
+
+        Destination destination = destinationRepository.findById(orderDto.getDestinationId())
+                .orElseThrow(() -> new InvalidOrderDtoException("Invalid destination ID: " + orderDto.getDestinationId()));
+
+        Order newOrder = new Order();
+        newOrder.setStatus(NEW);
+        newOrder.setDestination(destination);
+        newOrder.setDeliveryDate(OrderConverter.deliveryDateFromStringToLong(orderDto.getDeliveryDate()));
+        newOrder.setLastUpdated(System.currentTimeMillis());
+
+        return newOrder;
     }
 
     @Transactional
