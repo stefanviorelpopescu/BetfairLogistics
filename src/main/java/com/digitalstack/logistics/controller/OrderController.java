@@ -8,10 +8,7 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -36,5 +33,11 @@ public class OrderController
     @PostMapping("/cancel")
     public CancelOrdersResponse cancelOrders(@RequestBody List<Long> idsToDelete) {
         return ordersService.cancelOrders(idsToDelete);
+    }
+
+    @GetMapping("/status")
+    public List<OrderDto> getOrders(@RequestParam(required = false) String date,
+                                    @RequestParam(required = false) String destination) {
+        return ordersService.getOrders(date, destination);
     }
 }

@@ -8,4 +8,6 @@ import java.util.Optional;
 public interface DestinationRepository extends CrudRepository<Destination, Long>
 {
     Optional<Destination> findByName(String destinationName);
+
+    Optional<Destination> findByNameContainingIgnoreCase(String destinationName);
 }

@@ -95,4 +95,22 @@ public class OrdersService
 
         return response;
     }
+
+    public List<OrderDto> getOrders(String date, String destination)
+    {
+        if (date == null || date.isEmpty()) {
+            date = OrderConverter.deliveryDateFromLongToString(companyManager.getCurrentDate().atStartOfDay().toInstant(ZoneOffset.UTC).toEpochMilli());
+        }
+        long deliveryDate = OrderConverter.deliveryDateFromStringToLong(date);
+
+        List<Order> orders = new ArrayList<>();
+        if (destination == null || destination.isEmpty()) {
+            orders.addAll(ordersRepository.findAllByDeliveryDate(deliveryDate));
+        } else {
+            destinationRepository.findByNameContainingIgnoreCase(destination)
+                    .ifPresent(destinationModel -> orders.addAll(ordersRepository.findAllByDeliveryDateAndDestination(deliveryDate, destinationModel)));
+        }
+
+        return OrderConverter.fromOderModels(orders);
+    }
 }

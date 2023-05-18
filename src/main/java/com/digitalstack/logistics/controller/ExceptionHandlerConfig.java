@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.io.IOException;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.NoSuchElementException;
 import java.util.Objects;
@@ -29,7 +30,7 @@ public class ExceptionHandlerConfig
     }
 
     @ExceptionHandler(value = {InvalidDestinationDtoException.class, MethodArgumentNotValidException.class,
-            ConstraintViolationException.class, InvalidOrderDtoException.class})
+            ConstraintViolationException.class, InvalidOrderDtoException.class, DateTimeParseException.class})
     public ResponseEntity<String> handleDestinationAddExceptions(Exception exception) {
 
         if (exception instanceof MethodArgumentNotValidException) {
