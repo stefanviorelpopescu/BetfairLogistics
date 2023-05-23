@@ -9,7 +9,7 @@ import java.time.LocalDate;
 @Getter
 public class CompanyManager
 {
-    private LocalDate currentDate = LocalDate.of(2021, 12, 15);
+    private LocalDate currentDate = LocalDate.of(2021, 12, 14);
 
     private Long companyProfit = 0L;
 
