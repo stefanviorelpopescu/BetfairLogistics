@@ -1,0 +1,289 @@
+{
+	"info": {
+		"_postman_id": "36dd3e68-2ba9-4108-859d-649681103859",
+		"name": "LogisticsSystem",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Load Csv Data",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:9090/logistics/load",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9090",
+					"path": [
+						"logistics",
+						"load"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET All Destinations",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:9090/logistics/destinations",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9090",
+					"path": [
+						"logistics",
+						"destinations"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET Destination by ID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:9090/logistics/destinations/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9090",
+					"path": [
+						"logistics",
+						"destinations",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST Add Destination",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Salaj\",\r\n    \"distance\": 5\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9090/logistics/destinations/add",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9090",
+					"path": [
+						"logistics",
+						"destinations",
+						"add"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PUT Update Destination",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Salaji\",\r\n    \"distance\": 53\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9090/logistics/destinations/update",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9090",
+					"path": [
+						"logistics",
+						"destinations",
+						"update"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DEL Destination by ID",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:9090/logistics/destinations/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9090",
+					"path": [
+						"logistics",
+						"destinations",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST Add Order",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[\r\n    {\r\n        \"deliveryDate\": \"16-11-2023\",\r\n        \"destinationId\": 10\r\n    },\r\n    {\r\n        \"deliveryDate\": \"16-11-2023\",\r\n        \"destinationId\": 2\r\n    }\r\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9090/logistics/orders/add",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9090",
+					"path": [
+						"logistics",
+						"orders",
+						"add"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST Cancel Order",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[1, 5, 21, 25, 45, 2]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9090/logistics/orders/cancel",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9090",
+					"path": [
+						"logistics",
+						"orders",
+						"cancel"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET Search Orders",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:9090/logistics/orders/status?date=16-12-20213",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9090",
+					"path": [
+						"logistics",
+						"orders",
+						"status"
+					],
+					"query": [
+						{
+							"key": "date",
+							"value": "16-12-20213"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST New Day",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[1, 5, 21, 25, 45, 2]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9090/logistics/shipping/new-day",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9090",
+					"path": [
+						"logistics",
+						"shipping",
+						"new-day"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET Actuator Info",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:9090/logistics/actuator/info",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9090",
+					"path": [
+						"logistics",
+						"actuator",
+						"info"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
