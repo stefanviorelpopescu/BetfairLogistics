@@ -3,8 +3,10 @@ package com.digitalstack.logistics.service;
 import com.digitalstack.logistics.model.entity.Destination;
 import com.digitalstack.logistics.model.entity.Order;
 import com.digitalstack.logistics.helpers.OrderStatus;
+import com.digitalstack.logistics.repository.DestinationCache;
 import com.digitalstack.logistics.repository.DestinationRepository;
 import com.digitalstack.logistics.repository.OrdersRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
@@ -16,17 +18,21 @@ import java.time.ZoneOffset;
 @Service
 public class DataLoadingService
 {
-    public static final String DESTINATIONS_FILE_NAME = "src/main/resources/destinations.csv";
-    public static final String ORDERS_FILE_NAME = "src/main/resources/orders.csv";
+    @Value("${data.csv.destinations.path}")
+    public String DESTINATIONS_FILE_NAME;
+    @Value("${data.csv.orders.path}")
+    public String ORDERS_FILE_NAME;
 
-    public final DestinationRepository destinationRepository;
-    public final OrdersRepository ordersRepository;
+    private final DestinationRepository destinationRepository;
+    private final OrdersRepository ordersRepository;
+    private final DestinationCache destinationCache;
 
     public DataLoadingService(DestinationRepository destinationRepository,
-                              OrdersRepository ordersRepository)
+                              OrdersRepository ordersRepository, DestinationCache destinationCache)
     {
         this.destinationRepository = destinationRepository;
         this.ordersRepository = ordersRepository;
+        this.destinationCache = destinationCache;
     }
 
     public String loadCsvData() throws IOException
@@ -69,6 +75,7 @@ public class DataLoadingService
     {
         Destination destination = new Destination(tokens[0], Integer.parseInt(tokens[1]));
         destinationRepository.save(destination);
+        destinationCache.updateDestinationInCache(destination);
     }
 
     private void saveOrder(String[] tokens)
@@ -84,7 +91,8 @@ public class DataLoadingService
         order.setLastUpdated(System.currentTimeMillis());
 
         String destinationName = tokens[0];
-        Destination destination = destinationRepository.findByName(destinationName)
+//        Destination destination = destinationRepository.findByName(destinationName)
+        Destination destination = destinationCache.getByName(destinationName)
                 // throw new NoSuchElementException("No value present");
                 .orElseThrow();
         order.setDestination(destination);

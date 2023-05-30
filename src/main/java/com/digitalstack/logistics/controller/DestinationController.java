@@ -51,4 +51,8 @@ public class DestinationController
         destinationService.deleteDestinationById(id);
     }
 
+    @PostMapping("/cache/reload")
+    public void reloadDestinationsCache() {
+        destinationService.reloadDestinationsCache();
+    }
 }

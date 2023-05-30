@@ -8,6 +8,7 @@ import com.digitalstack.logistics.model.dto.CancelOrdersResponse;
 import com.digitalstack.logistics.model.dto.OrderDto;
 import com.digitalstack.logistics.model.entity.Destination;
 import com.digitalstack.logistics.model.entity.Order;
+import com.digitalstack.logistics.repository.DestinationCache;
 import com.digitalstack.logistics.repository.DestinationRepository;
 import com.digitalstack.logistics.repository.OrdersRepository;
 import jakarta.transaction.Transactional;
@@ -28,12 +29,15 @@ public class OrdersService
     private final OrdersRepository ordersRepository;
     private final DestinationRepository destinationRepository;
     private final CompanyManager companyManager;
+    private final DestinationCache destinationCache;
 
-    public OrdersService(OrdersRepository ordersRepository, DestinationRepository destinationRepository, CompanyManager companyManager)
+    public OrdersService(OrdersRepository ordersRepository, DestinationRepository destinationRepository,
+                         CompanyManager companyManager, DestinationCache destinationCache)
     {
         this.ordersRepository = ordersRepository;
         this.destinationRepository = destinationRepository;
         this.companyManager = companyManager;
+        this.destinationCache = destinationCache;
     }
 
     @Transactional
@@ -59,7 +63,7 @@ public class OrdersService
             throw new InvalidOrderDtoException("Order Date should be greater than current date!" + orderDto.getDeliveryDate());
         }
 
-        Destination destination = destinationRepository.findById(orderDto.getDestinationId())
+        Destination destination = destinationCache.getById(orderDto.getDestinationId())
                 .orElseThrow(() -> new InvalidOrderDtoException("Invalid destination ID: " + orderDto.getDestinationId()));
 
         Order newOrder = new Order();
@@ -107,7 +111,8 @@ public class OrdersService
         if (destination == null || destination.isEmpty()) {
             orders.addAll(ordersRepository.findAllByDeliveryDate(deliveryDate));
         } else {
-            destinationRepository.findByNameContainingIgnoreCase(destination)
+//            destinationRepository.findByNameContainingIgnoreCase(destination)
+            destinationCache.getByNameContainingCaseInsensitive(destination)
                     .ifPresent(destinationModel -> orders.addAll(ordersRepository.findAllByDeliveryDateAndDestination(deliveryDate, destinationModel)));
         }
 

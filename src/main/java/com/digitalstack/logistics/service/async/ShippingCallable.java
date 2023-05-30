@@ -1,4 +1,4 @@
-package com.digitalstack.logistics.service;
+package com.digitalstack.logistics.service.async;
 
 import com.digitalstack.logistics.company_manager.CompanyManager;
 import com.digitalstack.logistics.helpers.OrderStatus;
@@ -11,19 +11,18 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
 
 @Slf4j
-public class ShippingRunnable implements Runnable
+public class ShippingCallable implements Callable<Integer>
 {
     private final OrdersRepository ordersRepository;
-    private final CompanyManager companyManager;
     private final Destination destination;
     private final List<Long> orderIds;
 
-    public ShippingRunnable(OrdersRepository ordersRepository, CompanyManager companyManager, Map.Entry<Destination, List<Order>> destinationListEntry)
+    public ShippingCallable(OrdersRepository ordersRepository, Map.Entry<Destination, List<Order>> destinationListEntry)
     {
         this.ordersRepository = ordersRepository;
-        this.companyManager = companyManager;
         this.destination = destinationListEntry.getKey();
         this.orderIds = destinationListEntry.getValue().stream()
                 .mapToLong(Order::getId)
@@ -31,9 +30,8 @@ public class ShippingRunnable implements Runnable
                 .toList();
     }
 
-    @SneakyThrows
     @Override
-    public void run()
+    public Integer call() throws Exception
     {
         int noOfDeliveringOrders = updateOrders(OrderStatus.NEW, OrderStatus.DELIVERING);
         log.info("Starting deliveries for {}. We are delivering {} orders for {} km.", destination.getName(), noOfDeliveringOrders, destination.getDistance());
@@ -41,8 +39,9 @@ public class ShippingRunnable implements Runnable
         Thread.sleep(destination.getDistance() * 1000);
 
         int deliveredOrders = updateOrders(OrderStatus.DELIVERING, OrderStatus.DELIVERED);
-        companyManager.updateProfit((long) deliveredOrders * destination.getDistance());
         log.info("Delivered {} orders to {}", deliveredOrders, destination.getName());
+
+        return deliveredOrders * destination.getDistance();
     }
 
     private int updateOrders(OrderStatus oldStatus, OrderStatus newStatus) {
