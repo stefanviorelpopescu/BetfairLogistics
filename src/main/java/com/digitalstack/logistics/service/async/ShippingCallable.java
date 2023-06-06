@@ -1,11 +1,9 @@
 package com.digitalstack.logistics.service.async;
 
-import com.digitalstack.logistics.company_manager.CompanyManager;
 import com.digitalstack.logistics.helpers.OrderStatus;
 import com.digitalstack.logistics.model.entity.Destination;
 import com.digitalstack.logistics.model.entity.Order;
 import com.digitalstack.logistics.repository.OrdersRepository;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Iterator;

@@ -17,10 +17,6 @@ public class DestinationDto
 
     @NotNull(message = "Distance to destination must be set!")
     @Min(value = 1, message = "Distance must be positive integer!")
-    private int distance;
+    private Integer distance;
 
-//    @AssertTrue(message = "distance invalid")
-//    public boolean isDistanceValid() {
-//        return distance + name.length() > 15;
-//    }
 }
